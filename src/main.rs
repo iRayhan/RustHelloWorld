@@ -90,6 +90,12 @@ fn process_message(msg: Message) {
     }
 }
 
+fn return_result(value: i32) -> Result<String, String> {
+    let a: Result<String, String> = Ok(value.to_string());
+    let b: Result<String, String> = Err(value.to_string());
+    Err(value.to_string())
+}
+
 fn main() {
     // transfer ownership
     let a = String::from("2");
@@ -124,12 +130,39 @@ fn main() {
         timeout: 3.0,
     };
     child.debug;
-    
+
     // enums
     let message = Message::Write(String::from("hello"), 5);
+    return_result(5);
 
     // pattern
     let (_, x, ..) = (1, "sdfdsaf", 10, 23, 22);
+
+    // error handling
+    let s = String::from("a120a120");
+    let i: i32 = match s.parse() {
+        Ok(x) => x,
+        Err(y) => {
+            println!("{:?}", y);
+            let mut d = 0;
+            for z in s.chars() {
+                match z.to_digit(10) {
+                    Some(x) => {
+                        d *= 10;
+                        d += x as i32;
+                    }
+                    None => {
+                        break;
+                    }
+                };
+            }
+            if d >= 0 {
+                d = -1
+            };
+            d
+        }
+    };
+    println!("{}", i);
 
     // *a = String::from("3");
 
