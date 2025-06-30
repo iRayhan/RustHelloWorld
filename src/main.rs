@@ -96,8 +96,28 @@ fn return_result(value: i32) -> Result<String, String> {
     Err(value.to_string())
 }
 
+#[derive(Debug)]
+struct CustomError {
+    error_code: i32,
+    error_msg: String,
+}
+
+fn return_custom_result(s: String) -> Result<i32, CustomError> {
+    match s.parse() {
+        Ok(x) => Ok(x),
+        Err(y) => {
+            Err(
+                CustomError {
+                    error_code: 100,
+                    error_msg: String::from("custom error")
+                }
+            )
+        }
+    }
+}
+
 fn main() {
-    // transfer ownership
+/*    // transfer ownership
     let a = String::from("2");
     transfer_ownership(a);
 
@@ -136,11 +156,11 @@ fn main() {
     return_result(5);
 
     // pattern
-    let (_, x, ..) = (1, "sdfdsaf", 10, 23, 22);
+    let (_, x, ..) = (1, "sdfdsaf", 10, 23, 22);*/
 
     // error handling
     let s = String::from("a120a120");
-    let i: i32 = match s.parse() {
+/*    let i: i32 = match s.parse() {
         Ok(x) => x,
         Err(y) => {
             println!("{:?}", y);
@@ -162,7 +182,18 @@ fn main() {
             d
         }
     };
-    println!("{}", i);
+    println!("{}", i);*/
+    
+    let result = return_custom_result(s);
+    
+    if let Ok(x) = result { 
+        println!("{:?}", x);  
+    }
+    
+    else if let Err(y) = result { 
+        println!("{:?}", y.error_code);
+        println!("{:?}", y.error_msg);
+    }
 
     // *a = String::from("3");
 
