@@ -105,19 +105,39 @@ struct CustomError {
 fn return_custom_result(s: String) -> Result<i32, CustomError> {
     match s.parse() {
         Ok(x) => Ok(x),
-        Err(y) => {
-            Err(
-                CustomError {
-                    error_code: 100,
-                    error_msg: String::from("custom error")
-                }
-            )
-        }
+        Err(y) => Err(CustomError {
+            error_code: 100,
+            error_msg: String::from("custom error"),
+        }),
+    }
+}
+
+struct GenericStruct<T> {
+    grade: T,
+}
+
+fn get_grade<T>(grade: GenericStruct<T>) -> String
+where
+    T: std::fmt::Display,
+{
+    match std::any::type_name::<T>() {
+        "alloc::string::String" | "&str" => format!("String grade: {}", grade.grade),
+        "f64" => format!("Float grade: {}", grade.grade),
+        "i32" => format!("Integer grade: {}", grade.grade),
+        _ => format!("Unknown type grade: {}", grade.grade)
+    }
+}
+
+fn get_larger<T: PartialOrd>(a: T, b: T) -> T {
+    if a > b {
+        a
+    } else {
+        b
     }
 }
 
 fn main() {
-/*    // transfer ownership
+    /*    // transfer ownership
     let a = String::from("2");
     transfer_ownership(a);
 
@@ -156,11 +176,11 @@ fn main() {
     return_result(5);
 
     // pattern
-    let (_, x, ..) = (1, "sdfdsaf", 10, 23, 22);*/
+    let (_, x, ..) = (1, "sdfdsaf", 10, 23, 22);
 
     // error handling
     let s = String::from("a120a120");
-/*    let i: i32 = match s.parse() {
+    let i: i32 = match s.parse() {
         Ok(x) => x,
         Err(y) => {
             println!("{:?}", y);
@@ -182,18 +202,21 @@ fn main() {
             d
         }
     };
-    println!("{}", i);*/
-    
+    println!("{}", i);
+
     let result = return_custom_result(s);
-    
-    if let Ok(x) = result { 
-        println!("{:?}", x);  
+
+    if let Ok(x) = result {
+        println!("{:?}", x);
     }
-    
-    else if let Err(y) = result { 
+
+    else if let Err(y) = result {
         println!("{:?}", y.error_code);
         println!("{:?}", y.error_msg);
-    }
+    }*/
+    
+    let a = GenericStruct { grade: true };
+    println!("{}", get_grade(a));
 
     // *a = String::from("3");
 
