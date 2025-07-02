@@ -137,7 +137,7 @@ fn get_larger<T: PartialOrd>(a: T, b: T) -> T {
 }
 
 fn main() {
-    /*    // transfer ownership
+    // transfer ownership
     let a = String::from("2");
     transfer_ownership(a);
 
@@ -208,12 +208,10 @@ fn main() {
 
     if let Ok(x) = result {
         println!("{:?}", x);
-    }
-
-    else if let Err(y) = result {
+    } else if let Err(y) = result {
         println!("{:?}", y.error_code);
         println!("{:?}", y.error_msg);
-    }*/
+    }
     
     let a = GenericStruct { grade: true };
     println!("{}", get_grade(a));
