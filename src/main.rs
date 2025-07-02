@@ -213,6 +213,7 @@ fn main() {
         println!("{:?}", y.error_msg);
     }
     
+    // generics
     let a = GenericStruct { grade: true };
     println!("{}", get_grade(a));
 
