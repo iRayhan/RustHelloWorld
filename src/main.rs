@@ -182,14 +182,58 @@ where
     }
 }
 
-
-
-fn get_larger<T: PartialOrd>(a: T, b: T) -> T {
-    if a > b { a } else { b }
+#[derive(Debug)]
+struct StructMacro {
+    a: i32,
 }
 
+#[macro_export]
+macro_rules! test_macro {
+    (hi) => {
+       println!("hi"); 
+    };
+/*    ($struct_macro:expr) => {
+        let mut x = $struct_macro;
+        x.a += 1;
+        println!("test_macro:{:?}", $struct_macro);
+    };*/
+    ($usr:expr) => {
+        let mut x = match $usr[1] {
+            User2::IntName(y) => {
+                let mut y = y;
+                y += 1;
+                println!("{}", y);
+                y
+            },
+            _ => {
+                println!("test_macro");
+                0
+            }
+        };
+        println!("test_macro:{:?}", $usr);
+    };
+}
+struct User <T>{
+    name: T
+}
+
+#[derive(Debug)]
+enum User2{
+    StringName(String),
+    IntName(u32),
+}
 fn main() {
-    // transfer ownership
+    
+    // test_macro!(hi);
+    let mut a = StructMacro {
+        a: 1,
+    };
+    // test_macro!(& mut a);
+    
+    let mut v: Vec<User2> = vec![User2::StringName( String::from("a"))];
+    v.push(User2::IntName(1));
+    test_macro!(v);
+    /*// transfer ownership
     let a = String::from("2");
     transfer_ownership(a);
 
@@ -270,7 +314,7 @@ fn main() {
         grade: 101.5,
         error: false,
     };
-    println!("{}", get_grade(a).unwrap_or(String::from("unknown")));
+    println!("{}", get_grade(a).unwrap_or(String::from("unknown")));*/
 
     // *a = String::from("3");
 
