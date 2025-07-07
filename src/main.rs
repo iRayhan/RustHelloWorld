@@ -128,7 +128,7 @@ impl AllowedGrade for &str {
 impl AllowedGrade for i32 {
     fn to_int(&self) -> i32 {
         *self
-    } 
+    }
 }
 impl AllowedGrade for f32 {
     fn to_int(&self) -> i32 {
@@ -162,22 +162,37 @@ where
     match std::any::type_name::<T>() {
         "alloc::string::String" | "&str" => {
             grade.error = E::from_bool(false);
-            Some(format!("String grade, error: {} {}", grade.grade, grade.error))
-        },
+            Some(format!(
+                "String grade, error: {} {}",
+                grade.grade, grade.error
+            ))
+        }
         "i32" => {
             if grade.grade.to_int() > 100 {
                 grade.error = E::from_bool(true);
-                return Some(format!("Integer grade, error: {} {}", grade.grade, grade.error))
+                return Some(format!(
+                    "Integer grade, error: {} {}",
+                    grade.grade, grade.error
+                ));
             }
-            Some(format!("Integer grade, error: {} {}", grade.grade, grade.error))
+            Some(format!(
+                "Integer grade, error: {} {}",
+                grade.grade, grade.error
+            ))
         }
         "f32" => {
             if grade.grade.to_int() > 100 {
                 grade.error = E::from_bool(true);
-                return Some(format!("Float grade, error: {} {}", grade.grade, grade.error))
+                return Some(format!(
+                    "Float grade, error: {} {}",
+                    grade.grade, grade.error
+                ));
             }
-            Some(format!("Float grade, error: {} {}", grade.grade, grade.error))
-        },
+            Some(format!(
+                "Float grade, error: {} {}",
+                grade.grade, grade.error
+            ))
+        }
         _ => None,
     }
 }
@@ -190,49 +205,87 @@ struct StructMacro {
 #[macro_export]
 macro_rules! test_macro {
     (hi) => {
-       println!("hi"); 
+        println!("hi");
     };
-/*    ($struct_macro:expr) => {
+    /*    ($struct_macro:expr) => {
         let mut x = $struct_macro;
         x.a += 1;
         println!("test_macro:{:?}", $struct_macro);
     };*/
-    ($usr:expr) => {
-        let mut x = match $usr[1] {
-            User2::IntName(y) => {
+    ($test:expr) => {
+        let mut x = match $test[1] {
+            TestMacro2::IntName(y) => {
                 let mut y = y;
                 y += 1;
                 println!("{}", y);
                 y
-            },
+            }
             _ => {
                 println!("test_macro");
                 0
             }
         };
-        println!("test_macro:{:?}", $usr);
+        println!("test_macro:{:?}", $test);
     };
 }
-struct User <T>{
-    name: T
+
+struct TestMacro<T> {
+    name: T,
 }
 
 #[derive(Debug)]
-enum User2{
-    StringName(String),
-    IntName(u32),
+enum TestMacro2<T, E> {
+    StringName(T),
+    IntName(E),
 }
+
+#[macro_export]
+macro_rules! test_macro_3{
+    ($test3:expr) => {
+        for x in $test3 {
+            let y = match x.cast_string() {
+                "Unknown" => {
+                    println!("another type: {:?}", x);
+                    x
+                },
+                _ => {
+                    println!("string type: {:?}", x);
+                    x
+                }
+            };
+        }
+        }
+}
+#[derive(Debug)]
+enum TestMacro3<T> {
+    AnyType(T),
+}
+impl<T> TestMacro3<T> {
+    fn cast_string(&self) -> &str {
+        match std::any::type_name::<T>() {
+            "alloc::string::String" | "&str" => std::any::type_name::<T>(),
+            _ => "Unknown",
+        }
+    }
+}
+
 fn main() {
-    
     // test_macro!(hi);
-    let mut a = StructMacro {
-        a: 1,
-    };
+    let mut a = StructMacro { a: 1 };
     // test_macro!(& mut a);
-    
-    let mut v: Vec<User2> = vec![User2::StringName( String::from("a"))];
-    v.push(User2::IntName(1));
-    test_macro!(v);
+
+    // let mut v: Vec<TestMacro2<String, i32>> = vec![TestMacro2::StringName( String::from("a"))];
+    // v.push(TestMacro2::IntName(1));
+    // test_macro!(v);
+
+    let mut v = vec![TestMacro3::AnyType(10.11)];
+    test_macro_3!(v);
+
+    let mut v = vec![TestMacro3::AnyType("Gadha")];
+    test_macro_3!(v);
+
+    // let mut v: Vec<TestMacro3<i32>> = vec![TestMacro3::AnyType( 100)];
+
     /*// transfer ownership
     let a = String::from("2");
     transfer_ownership(a);
@@ -310,7 +363,7 @@ fn main() {
     }
 
     // generics
-    let a = GenericStruct { 
+    let a = GenericStruct {
         grade: 101.5,
         error: false,
     };
