@@ -1,4 +1,8 @@
+use std::cell::RefCell;
+use std::collections::LinkedList;
+use std::rc::Rc;
 use std::sync::Arc;
+use std::thread::JoinHandle;
 
 fn send() {
     let s = String::from("hello");
@@ -268,15 +272,55 @@ impl<T> TestMacro3<T> {
         }
     }
 }
+fn test_concurrency() {
+    println!("Hello from a thread!")
+}
+
+#[derive(Debug)]
+struct TestLinkedList {
+    data: String,
+    pointer: Box<RefCell<Option<TestLinkedList>>>
+}
 
 fn main() {
-    // test_macro!(hi);
-    let mut a = StructMacro { a: 1 };
-    // test_macro!(& mut a);
 
-    // let mut v: Vec<TestMacro2<String, i32>> = vec![TestMacro2::StringName( String::from("a"))];
-    // v.push(TestMacro2::IntName(1));
-    // test_macro!(v);
+    let a = TestLinkedList {
+        data: String::from("a"),
+        pointer: Box::new(RefCell::new(None))
+    };
+
+    let b = TestLinkedList {
+        data: String::from("b"),
+        pointer: Box::new(RefCell::new(Some(a)))
+    };
+
+    *b.pointer.borrow_mut() = None;
+    let c = b.pointer.borrow_mut();
+    drop(c);
+
+    // *c = None;
+
+    println!("{:?}", b);
+
+/*    println!("start");
+    test_concurrency();
+    println!("end");*/
+
+/*    let a = Rc::new(RefCell::new(String::from("1")));
+    let mut b = a.borrow().to_string();
+
+    a.borrow_mut().push_str("2");
+    b.push('3');
+    println!("{:?}", a.borrow());
+    println!("{:?}", b);*/
+
+    /*test_macro!(hi);
+    let mut a = StructMacro { a: 1 };
+    test_macro!(& mut a);
+
+    let mut v: Vec<TestMacro2<String, i32>> = vec![TestMacro2::StringName( String::from("a"))];
+    v.push(TestMacro2::IntName(1));
+    test_macro!(v);
 
     let mut v = vec![TestMacro3::AnyType(10.11)];
     test_macro_3!(v);
@@ -286,7 +330,7 @@ fn main() {
 
     // let mut v: Vec<TestMacro3<i32>> = vec![TestMacro3::AnyType( 100)];
 
-    /*// transfer ownership
+    // transfer ownership
     let a = String::from("2");
     transfer_ownership(a);
 
