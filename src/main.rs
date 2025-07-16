@@ -1,8 +1,11 @@
+mod backend;
+
 use std::cell::RefCell;
 use std::collections::LinkedList;
 use std::rc::Rc;
 use std::sync::Arc;
 use std::thread::JoinHandle;
+use crate::backend::{get_listener, get_notes_route};
 
 fn send() {
     let s = String::from("hello");
@@ -344,8 +347,10 @@ mod tests1 {
     }
 }
 
+#[tokio::main]
+async fn main() {
 
-fn main() {
+    axum::serve(get_listener().await, get_notes_route()).await.unwrap();
 
 /*    let a = TestLinkedList {
         data: String::from("a"),
