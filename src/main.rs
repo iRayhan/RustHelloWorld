@@ -347,10 +347,29 @@ mod tests1 {
     }
 }
 
+#[derive(Debug,Copy,Clone)]
+struct sample_struct {
+    i: i32
+}
+
 #[tokio::main]
 async fn main() {
-
+    
     axum::serve(get_listener().await, get_notes_route()).await.unwrap();
+    
+/*
+    let mut a = sample_struct {
+        i: 2
+    };
+    let mut b = a;
+    b = sample_struct {
+        i: 3
+    };
+
+    let mut c = &mut a;
+    *c = 4;
+
+    println!("{:?}, {:?}", a, b);*/
 
 /*    let a = TestLinkedList {
         data: String::from("a"),
