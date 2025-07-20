@@ -27,7 +27,6 @@ pub async fn get_note_handler() -> String {
 }
 
 pub fn get_notes_route() -> Router {
-    let note_list = serde_json::to_string(&get_notes()).unwrap();
     get_router()
         .route("/", get(get_note_handler))
         .route_layer(middleware::from_fn(add_middleware1))
