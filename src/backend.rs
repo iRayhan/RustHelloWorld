@@ -1,3 +1,4 @@
+use axum::body::Body;
 use axum::extract::Request;
 use axum::http::HeaderValue;
 use axum::middleware::Next;
@@ -51,16 +52,29 @@ pub async fn add_middleware1(mut req: Request, next: Next) -> Response {
         "x-custom-header-1",
         HeaderValue::from_static("add_middleware1"),
     );
-    println!("{:?}", header);
+    println!("add_middleware1 {:?}", header);
     next.run(req).await
 }
 
+// header validation
 pub async fn add_middleware2(mut req: Request, next: Next) -> Response {
     let header = req.headers_mut();
-    header.insert(
-        "x-custom-header-3",
-        HeaderValue::from_static("add_middleware2"),
-    );
-    println!("{:?}", header);
-    next.run(req).await
+    let header_get = header.get("x-custom-header-2");
+    match header_get {
+        Some(value) => {
+            let value = value.to_str().unwrap();
+            if value == "test header value" {
+                next.run(req).await
+            } else {
+                Response::builder()
+                    .status(401)
+                    .body(Body::from("Unauthorized Body"))
+                    .unwrap()
+            }
+        }
+        None => Response::builder()
+            .status(502)
+            .body(Body::from("Empty Body"))
+            .unwrap(),
+    }
 }
