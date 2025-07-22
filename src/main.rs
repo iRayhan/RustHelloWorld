@@ -5,6 +5,11 @@ use std::collections::LinkedList;
 use std::rc::Rc;
 use std::sync::Arc;
 use std::thread::JoinHandle;
+use tracing::{debug, error, info, span, warn, Level};
+use tracing::field::debug;
+use tracing::log::LevelFilter;
+use tracing_subscriber::EnvFilter;
+use tracing_subscriber::filter::Directive;
 use crate::backend::{get_listener, get_notes_route};
 
 fn send() {
@@ -354,9 +359,23 @@ struct sample_struct {
 
 #[tokio::main]
 async fn main() {
-    
-    axum::serve(get_listener().await, get_notes_route()).await.unwrap();
-    
+
+
+/*    let subscriber = tracing_subscriber::fmt()
+        .with_env_filter(EnvFilter::new(LevelFilter::Debug.to_string()))
+        .finish();
+
+    tracing::subscriber::set_global_default(subscriber)
+        .expect("setting default subscriber failed");
+
+    info!("i am info");
+    warn!("i am warn");
+    debug!("i am debug");
+    error!("i am error");
+    */
+
+    // axum::serve(get_listener().await, get_notes_route()).await.unwrap();
+
 /*
     let mut a = sample_struct {
         i: 2
