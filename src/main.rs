@@ -1,16 +1,10 @@
 mod backend;
+mod mysql_db;
 
+use crate::mysql_db::{get_all, get_pool, init_env};
+use sqlx::query;
 use std::cell::RefCell;
-use std::collections::LinkedList;
-use std::rc::Rc;
 use std::sync::Arc;
-use std::thread::JoinHandle;
-use tracing::{debug, error, info, span, warn, Level};
-use tracing::field::debug;
-use tracing::log::LevelFilter;
-use tracing_subscriber::EnvFilter;
-use tracing_subscriber::filter::Directive;
-use crate::backend::{get_listener, get_notes_route};
 
 fn send() {
     let s = String::from("hello");
@@ -252,21 +246,21 @@ enum TestMacro2<T, E> {
 }
 
 #[macro_export]
-macro_rules! test_macro_3{
+macro_rules! test_macro_3 {
     ($test3:expr) => {
         for x in $test3 {
             let y = match x.cast_string() {
                 "Unknown" => {
                     println!("another type: {:?}", x);
                     x
-                },
+                }
                 _ => {
                     println!("string type: {:?}", x);
                     x
                 }
             };
         }
-        }
+    };
 }
 #[derive(Debug)]
 enum TestMacro3<T> {
@@ -287,7 +281,7 @@ fn test_concurrency() {
 #[derive(Debug)]
 struct TestLinkedList {
     data: String,
-    pointer: Box<RefCell<Option<TestLinkedList>>>
+    pointer: Box<RefCell<Option<TestLinkedList>>>,
 }
 
 fn addition(a: i32, b: i32) -> i32 {
@@ -352,16 +346,23 @@ mod tests1 {
     }
 }
 
-#[derive(Debug,Copy,Clone)]
+#[derive(Debug, Copy, Clone)]
 struct sample_struct {
-    i: i32
+    i: i32,
 }
+
+
 
 #[tokio::main]
 async fn main() {
+    init_env();
 
+    let pool = get_pool().await;
+    let get_all = get_all(pool).await;
 
-/*    let subscriber = tracing_subscriber::fmt()
+    println!("{:?}", get_all);
+
+    /*    let subscriber = tracing_subscriber::fmt()
         .with_env_filter(EnvFilter::new(LevelFilter::Debug.to_string()))
         .finish();
 
@@ -376,7 +377,7 @@ async fn main() {
 
     // axum::serve(get_listener().await, get_notes_route()).await.unwrap();
 
-/*
+    /*
     let mut a = sample_struct {
         i: 2
     };
@@ -390,7 +391,7 @@ async fn main() {
 
     println!("{:?}, {:?}", a, b);*/
 
-/*    let a = TestLinkedList {
+    /*    let a = TestLinkedList {
         data: String::from("a"),
         pointer: Box::new(RefCell::new(None))
     };
@@ -408,11 +409,11 @@ async fn main() {
 
     println!("{:?}", b);*/
 
-/*    println!("start");
+    /*    println!("start");
     test_concurrency();
     println!("end");*/
 
-/*    let a = Rc::new(RefCell::new(String::from("1")));
+    /*    let a = Rc::new(RefCell::new(String::from("1")));
     let mut b = a.borrow().to_string();
 
     a.borrow_mut().push_str("2");

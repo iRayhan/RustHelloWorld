@@ -11,3 +11,5 @@ serde_json = "1.0.140"
 anyhow = "1.0.98"
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+sqlx = { version = "0.8.6", features = ["mysql", "macros", "runtime-tokio"] }
+dotenv = "0.15.0"
