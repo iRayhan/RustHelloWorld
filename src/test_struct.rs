@@ -44,3 +44,24 @@ fn return_result(value: i32) -> Result<String, String> {
 struct sample_struct {
     i: i32,
 }
+
+fn some_number() -> Option<u32> {
+    Some(42)
+}
+
+#[derive(Debug)]
+struct Person {
+    name: String,
+    age: i8,
+    profile: Profile,
+}
+
+#[derive(Debug)]
+struct Profile {
+    name: String,
+    experience: i8,
+}
+
+fn add(a: i32, b: i32) -> i32 {
+    a + b
+}

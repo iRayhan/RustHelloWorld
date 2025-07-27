@@ -1,12 +1,11 @@
-
-mod backend;
-mod log_trace;
-mod mysql_db;
+mod test_axum;
 mod test_enum;
 mod test_error_handling;
 mod test_generic;
 mod test_linked_list;
+mod test_log_trace;
 mod test_macro;
+mod test_mysql_db;
 mod test_ownership;
 mod test_struct;
 mod test_test;
@@ -15,7 +14,7 @@ mod test_test;
 async fn main() {
 
     // database
-/*
+    /*
     init_env();
 
     let pool = get_pool().await;
@@ -241,25 +240,4 @@ async fn main() {
     }
     println!("names: {:?}", names);
     */
-}
-
-fn some_number() -> Option<u32> {
-    Some(42)
-}
-
-#[derive(Debug)]
-struct Person {
-    name: String,
-    age: i8,
-    profile: Profile,
-}
-
-#[derive(Debug)]
-struct Profile {
-    name: String,
-    experience: i8,
-}
-
-fn add(a: i32, b: i32) -> i32 {
-    a + b
 }
