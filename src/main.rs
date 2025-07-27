@@ -1,7 +1,7 @@
 mod backend;
 mod mysql_db;
 
-use crate::mysql_db::{get_all, get_pool, init_env};
+use crate::mysql_db::{delete, get_all, get_pool, init_env, insert, TestTableData};
 use sqlx::query;
 use std::cell::RefCell;
 use std::sync::Arc;
@@ -358,7 +358,16 @@ async fn main() {
     init_env();
 
     let pool = get_pool().await;
-    let get_all = get_all(pool).await;
+
+    let data = TestTableData {
+        id: 0,
+        name: Some(String::from("user4")),
+    };
+    insert(&pool, data).await.unwrap();
+
+    // delete(&pool, 6).await.unwrap();
+
+    let get_all = get_all(&pool).await;
 
     println!("{:?}", get_all);
 
