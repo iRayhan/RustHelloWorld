@@ -1,7 +1,7 @@
 use sqlx::mysql::MySqlQueryResult;
 use sqlx::{query, query_as, Error, MySql, Pool};
 use std::env;
-
+/*
 pub fn init_env() {
     dotenv::dotenv().ok();
 }
@@ -42,3 +42,4 @@ pub async fn delete(pool: &Pool<MySql>, delete_id: i32) -> Result<MySqlQueryResu
         .execute(pool)
         .await
 }
+*/

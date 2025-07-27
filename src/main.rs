@@ -1,3 +1,5 @@
+use crate::test_log_trace::{print_debug, print_error, print_info, print_warn, subscribe_log};
+
 mod test_axum;
 mod test_enum;
 mod test_error_handling;
@@ -15,31 +17,31 @@ async fn main() {
 
     // database
     /*
-    init_env();
+        init_env();
 
-    let pool = get_pool().await;
+        let pool = get_pool().await;
 
-    let data = TestTableData {
-        id: 0,
-        name: Some(String::from("user4")),
-    };
-    insert(&pool, data).await.unwrap();
+        let data = TestTableData {
+            id: 0,
+            name: Some(String::from("user4")),
+        };
+        insert(&pool, data).await.unwrap();
 
-    delete(&pool, 6).await.unwrap();
+        delete(&pool, 6).await.unwrap();
 
-    let get_all = get_all(&pool).await;
+        let get_all = get_all(&pool).await;
 
-    println!("{:?}", get_all);
+        println!("{:?}", get_all);
     */
 
     // log trace
-    /*
+
         subscribe_log();
         print_debug("debug");
         print_warn("warn");
         print_info("info");
         print_error("error");
-    */
+
 
     // backend
     // axum::serve(get_listener().await, get_notes_route()).await.unwrap();
